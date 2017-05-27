@@ -8,13 +8,13 @@ Grab via Maven:
 <dependency>
   <groupId>com.lynn.filepicker</groupId>
   <artifactId>filepicker</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <type>pom</type>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.lynn.filepicker:filepicker:1.0.1'
+compile 'com.lynn.filepicker:filepicker:1.0.2'
 ```
 
 
@@ -100,7 +100,10 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 			}
 		});	
                   
-### License
+		  
+		  
+		  
+## License
     Copyright (C) 2017 Lynn
 
     Licensed under the Apache License, Version 2.0 (the "License");
