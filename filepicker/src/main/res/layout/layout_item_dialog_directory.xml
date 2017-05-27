@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="?attr/selectableItemBackground">
+
+    <ImageView
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_folder"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@mipmap/ic_folder"
+        android:layout_centerVertical="true"
+        android:layout_alignLeft="@+id/view"
+        android:layout_alignStart="@+id/view"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/iv_folder">
+        <TextView
+            android:id="@+id/tv_directory_name"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:layout_height="0dp"
+            android:maxLength="20"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            tools:text="文件夹名"/>
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+        <TextView
+            android:gravity="top"
+            android:id="@+id/tv_file_count"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:maxLength="20"
+            android:textColor="#aaaaaa"
+            android:textSize="14sp"
+            tools:text="文件个数"/>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/iv_is_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:src="@mipmap/ic_is_checked"/>
+
+    <View
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="#cccccc"
+        android:id="@+id/view"/>
+</RelativeLayout>

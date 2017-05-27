@@ -1,0 +1,19 @@
+<resources>
+    <string name="confirm">确定</string>
+    <string name="save">保存</string>
+    <string name="edit">编辑</string>
+    <string name="preview">预览</string>
+    <string name="pick_audio">选择音频</string>
+    <string name="pick_image">选择图片</string>
+    <string name="pick_video">选择视频</string>
+    <string name="pick_other_file">选择其它文件</string>
+    <string name="most_pick">最多选择</string>
+    <string name="files">个文件</string>
+    <string name="all">全部</string>
+    <string name="edit_image">编辑图片</string>
+    <string name="empty">啥也没有</string>
+    <string name="click_to_record_audio">点击图片可进行录音</string>
+    <string name="click_to_take_photo">点击图片可进行拍照</string>
+    <string name="click_to_record_video">点击图片可进行录像</string>
+    <string name="request_permission_fail">请求权限失败</string>
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.lynn.filepicker">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+        android:name=".activity.ImageBrowserActivity"
+        android:hardwareAccelerated="false"
+        android:screenOrientation="portrait"
+        android:theme="@style/FilePickerTheme"/>
+        <activity
+            android:name="com.lynn.filepicker.activity.ImageBrowserActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FilePickerTheme"/>
+        <activity
+            android:name="com.lynn.filepicker.activity.ImagePickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FilePickerTheme"/>
+        <activity
+            android:name="com.lynn.filepicker.activity.AudioPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FilePickerTheme"/>
+        <activity
+            android:name="com.lynn.filepicker.activity.VideoPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FilePickerTheme"/>
+        <activity
+            android:name="com.lynn.filepicker.activity.OtherFilesPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/FilePickerTheme"/>
+        <activity android:name="com.lynn.filepicker.activity.ImageEditActivity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/FilePickerTheme">
+        </activity>
+    </application>
+
+</manifest>

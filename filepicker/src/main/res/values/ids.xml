@@ -1,0 +1,15 @@
+<resources>
+    <item name="statusbar_view" type="id"/>
+    <item name="translucent_view" type="id"/>
+    <item name="iv_file" type="id"/>
+    <item name="tv_title" type="id"/>
+    <item name="tv_duration" type="id"/>
+    <item name="cbx" type="id"/>
+    <item name="iv_thumbnail" type="id"/>
+    <item name="shadow" type="id"/>
+    <item name="view" type="id"/>
+    <item name="iv_folder" type="id"/>
+    <item name="tv_file_count" type="id"/>
+    <item name="iv_is_selected" type="id"/>
+
+</resources>

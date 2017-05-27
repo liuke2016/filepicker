@@ -1,0 +1,19 @@
+<resources>
+    <string name="confirm">confirm</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="preview">Preview</string>
+    <string name="pick_audio">Pick audio</string>
+    <string name="pick_image">Pick image</string>
+    <string name="pick_video">Pick video</string>
+    <string name="pick_other_file">Pick other file</string>
+    <string name="most_pick">Pick</string>
+    <string name="files">files at most</string>
+    <string name="all">All</string>
+    <string name="edit_image">Edit image</string>
+    <string name="empty">Nothing</string>
+    <string name="click_to_record_audio">Click on the picture to record</string>
+    <string name="click_to_take_photo">Click on the picture to take photo</string>
+    <string name="click_to_record_video">Click on the picture for video recording</string>
+    <string name="request_permission_fail">Requested permission failed</string>
+</resources>
