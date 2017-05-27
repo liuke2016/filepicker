@@ -15,8 +15,9 @@ or Gradle:
 ```groovy
 compile 'com.lynn.filepicker:filepicker:1.0.1'
 ```
-###Usage
-##PickImage
+### Usage
+## PickImage
+
     ```java
    FilePicker.pickImage(this).subscribe(new Consumer<ArrayList<ImageFile>>() {
        @Override
@@ -24,7 +25,6 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
           //
        }
     });
-    
     ```
 
 ### License
