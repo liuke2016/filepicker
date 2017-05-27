@@ -40,7 +40,7 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 			}
 		});		
 ### PickVideo
-	FilePicker.pickVideo(this)
+	FilePicker.pickVideo(Activity or Fragment)
 		.subscribe(new Consumer<ArrayList<VideoFile>>() {
 			@Override
 			public void accept(ArrayList<VideoFile> videoFiles) throws Exception {
@@ -48,7 +48,7 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 			}
 		});
 		
-	FilePicker.pickVideo(this, new VideoPickerConfig.Builder()
+	FilePicker.pickVideo(Activity or Fragment, new VideoPickerConfig.Builder()
                         .isNeedCamera(true)
                         .maxNumber(5)
                         .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
@@ -60,7 +60,7 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 			}
 		});		
 ### PickAudio
-	FilePicker.pickAudio(this)
+	FilePicker.pickAudio(Activity or Fragment)
 		subscribe(new Consumer<ArrayList<AudioFile>>() {
 			@Override
 			public void accept(ArrayList<AudioFile> imageFiles) throws Exception {
@@ -68,7 +68,7 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 			}
 		});
 		
-	FilePicker.pickAudio(this, new AudioPickerConfig.Builder()
+	FilePicker.pickAudio(Activity or Fragment, new AudioPickerConfig.Builder()
                         .isNeedRecord(true)
                         .maxNumber(5)
                         .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
@@ -80,7 +80,7 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 			}
 		});
 ### PickOtherFile
-	FilePicker.pickOtherFile(this)
+	FilePicker.pickOtherFile(Activity or Fragment)
 		.subscribe(new Consumer<ArrayList<OtherFile>>() {
 			@Override
 			public void accept(ArrayList<OtherFile> otherFiles) throws Exception {
@@ -88,7 +88,7 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 			}
 		});
 		
-	FilePicker.pickOtherFile(this, new OtherFilePickerConfig.Builder()
+	FilePicker.pickOtherFile(Activity or FragmentActivity or Fragment, new OtherFilePickerConfig.Builder()
                         .suffix(new String[]{"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"})
 			.steepToolBarColor(getResources().getColor(R.color.colorPrimary))
                         .maxNumber(5)
