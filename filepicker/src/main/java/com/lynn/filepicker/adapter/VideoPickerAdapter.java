@@ -61,7 +61,7 @@ public class VideoPickerAdapter extends BasePickerAdapter<VideoFile> {
             WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             int width = wm.getDefaultDisplay().getWidth();
             itemView.setBackgroundColor(mContext.getResources().getColor(R.color.BgItem));
-            itemView.setLayoutParams(new ViewGroup.LayoutParams(width / BasePickerActivity.COLUMN_NUMBER, width / BasePickerActivity.COLUMN_NUMBER));
+            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, width / BasePickerActivity.COLUMN_NUMBER));
 
             ImageView ivThumbnail = new ImageView(mContext);
             ivThumbnail.setId(R.id.iv_thumbnail);
