@@ -20,13 +20,25 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 
 ## Usage
 ### PickImage
-       FilePicker.pickImage(this)
-       .subscribe(new Consumer<ArrayList<ImageFile>>() {
-       @Override
-       public void accept(ArrayList<ImageFile> imageFiles) throws Exception {
-          //do something
-       }
-    	});
+	FilePicker.pickImage(this)
+		.subscribe(new Consumer<ArrayList<ImageFile>>() {
+			@Override
+			public void accept(ArrayList<ImageFile> imageFiles) throws Exception {
+				//do something
+			}
+		});
+		
+	FilePicker.pickImage(this, new ImagePickerConfig.Builder()
+                        .isNeedCamera(true)
+                        .maxNumber(5)
+                        .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
+			.build())
+		.subscribe(new Consumer<ArrayList<ImageFile>>() {
+			@Override
+			public void accept(ArrayList<ImageFile> imageFiles) throws Exception {
+				//do something
+			}
+		});		
 ### PickVideo
 	FilePicker.pickVideo(this)
 		.subscribe(new Consumer<ArrayList<VideoFile>>() {
@@ -35,8 +47,32 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 				//do something
 			}
 		});
+		
+	FilePicker.pickVideo(this, new VideoPickerConfig.Builder()
+                        .isNeedCamera(true)
+                        .maxNumber(5)
+                        .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
+			.build())
+		.subscribe(new Consumer<ArrayList<VideoFile>>() {
+			@Override
+			public void accept(ArrayList<VideoFile> videoFiles) throws Exception {
+				//do something
+			}
+		});		
 ### PickAudio
 	FilePicker.pickAudio(this)
+		subscribe(new Consumer<ArrayList<AudioFile>>() {
+			@Override
+			public void accept(ArrayList<AudioFile> imageFiles) throws Exception {
+				//do something
+			}
+		});
+		
+	FilePicker.pickAudio(this, new AudioPickerConfig.Builder()
+                        .isNeedRecord(true)
+                        .maxNumber(5)
+                        .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
+			.build())
 		subscribe(new Consumer<ArrayList<AudioFile>>() {
 			@Override
 			public void accept(ArrayList<AudioFile> imageFiles) throws Exception {
@@ -51,6 +87,18 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
 				//do something
 			}
 		});
+		
+	FilePicker.pickOtherFile(this, new OtherFilePickerConfig.Builder()
+                        .suffix(new String[]{"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"})
+			.steepToolBarColor(getResources().getColor(R.color.colorPrimary))
+                        .maxNumber(5)
+                        .build())
+		.subscribe(new Consumer<ArrayList<OtherFile>>() {
+			@Override
+			public void accept(ArrayList<OtherFile> otherFiles) throws Exception {
+				//do something
+			}
+		});	
                   
 ### License
     Copyright (C) 2017 Lynn
