@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_pick_audio:
                 FilePicker.pickAudio(this, new AudioPickerConfig.Builder()
-                        .isNeedRecord(true)/**选择音频文件可设置是否需要录音*/
+                        .isNeedRecord(true)
                         .maxNumber(5)
-                        .steepToolBarColor(getResources().getColor(R.color.colorPrimary))/**标题栏颜色*/
+                        .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
                         .build())
                         .subscribe(new Consumer<ArrayList<AudioFile>>() {
                             @Override
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_pick_file:
                 FilePicker.pickOtherFile(this, new OtherFilePickerConfig.Builder()
-                        .suffix(new String[]{"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"})/** 选择其它文件必须设置要选择的文件后缀，不设置抛出异常*/
+                        .suffix(new String[]{"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"})
                         .maxNumber(5)
                         .build())
                         .subscribe(new Consumer<ArrayList<OtherFile>>() {

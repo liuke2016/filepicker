@@ -127,12 +127,14 @@ public class FilePicker {
     public static Observable<ArrayList<OtherFile>> pickOtherFile(@NonNull Activity activity) {
         return pickOtherFile(activity.getFragmentManager(), new OtherFilePickerConfig.Builder()
                 .maxNumber(9)
+                .suffix(new String[]{"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"})
                 .build());
     }
 
     public static Observable<ArrayList<OtherFile>> pickOtherFile(@NonNull Fragment fragment) {
         return pickOtherFile(fragment.getFragmentManager(), new OtherFilePickerConfig.Builder()
                 .maxNumber(9)
+                .suffix(new String[]{"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"})
                 .build());
     }
 
