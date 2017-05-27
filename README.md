@@ -26,31 +26,31 @@ compile 'com.lynn.filepicker:filepicker:1.0.1'
        public void accept(ArrayList<ImageFile> imageFiles) throws Exception {
           //do something
        }
-    });
+    	});
 ### PickVideo
-                FilePicker.pickVideo(this)
-                        .subscribe(new Consumer<ArrayList<VideoFile>>() {
-                            @Override
-                            public void accept(ArrayList<VideoFile> videoFiles) throws Exception {
-                               //do something
-                            }
-                        });
+	FilePicker.pickVideo(this)
+		.subscribe(new Consumer<ArrayList<VideoFile>>() {
+			@Override
+			public void accept(ArrayList<VideoFile> videoFiles) throws Exception {
+				//do something
+			}
+		});
 ### PickAudio
-                            FilePicker.pickAudio(this)
-                        .subscribe(new Consumer<ArrayList<AudioFile>>() {
-                            @Override
-                            public void accept(ArrayList<AudioFile> imageFiles) throws Exception {
-                                      //do something
-                            }
-                        });
+	FilePicker.pickAudio(this)
+		subscribe(new Consumer<ArrayList<AudioFile>>() {
+			@Override
+			public void accept(ArrayList<AudioFile> imageFiles) throws Exception {
+				//do something
+			}
+		});
 ### PickOtherFile
-                FilePicker.pickOtherFile(this)
-                        .subscribe(new Consumer<ArrayList<OtherFile>>() {
-                            @Override
-                            public void accept(ArrayList<OtherFile> otherFiles) throws Exception {
-                                 //do something
-                            }
-                        });
+	FilePicker.pickOtherFile(this)
+		.subscribe(new Consumer<ArrayList<OtherFile>>() {
+			@Override
+			public void accept(ArrayList<OtherFile> otherFiles) throws Exception {
+				//do something
+			}
+		});
                   
 ### License
     Copyright (C) 2017 Lynn
