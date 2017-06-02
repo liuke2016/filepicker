@@ -40,7 +40,6 @@ public class ImageEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_image_edit);
         getWindow().getDecorView().setBackgroundColor(Color.BLACK);
         mImageEditLayout = new ImageEditLayout(this);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
