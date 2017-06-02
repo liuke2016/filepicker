@@ -34,7 +34,7 @@ publish {
     userOrg = 'liuke2017'
     groupId = 'com.lynn.filepicker'
     artifactId = 'filepicker'
-    publishVersion = '1.0.2'
+    publishVersion = '1.0.3'
     desc = 'A file picker for Android,imitate WeChat\'s picture selection module.'
     website = 'https://github.com/liuke2016/filepicker'
 }
