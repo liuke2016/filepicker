@@ -95,6 +95,10 @@ public class ImagePickerActivity extends BasePickerActivity<ImageFile> {
                             }
                         }
                         ArrayList<ImageFile> selectedList = mAdapter.getSelectedList();
+                        if(selectedList.size()==0){
+                            selectedList.add(imageFile);
+                            return;
+                        }
                         for (int i = 0; i < selectedList.size(); i++) {
                             BaseFile baseFile = selectedList.get(i);
                             if (baseFile.getId() == imageFile.getId()) {
