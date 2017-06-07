@@ -1,29 +1,58 @@
 package com.lynn.filepicker.config;
 
+import android.os.Environment;
+import android.text.TextUtils;
+
+import com.lynn.filepicker.Util;
+
 /**
  * Created by liuke on 2017/5/12.
  */
 
 public class ImagePickerConfig extends BasePickerConfig {
-
+    public static final String DEFAULT_EDIT_SAVE_PATH = Util.getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES).getAbsolutePath();
     private boolean isNeedCamera;
+    private boolean isNeedEdit;
+    private String editSavePath;
 
     private ImagePickerConfig(Builder builder) {
         super(builder);
         isNeedCamera = builder.isNeedCamera;
+        editSavePath = builder.editSavePath;
+        isNeedEdit = builder.isNeedEdit;
     }
+
     public boolean isNeedCamera() {
         return isNeedCamera;
     }
 
+    public String getEditSavePath() {
+        return editSavePath;
+    }
+
+    public boolean isNeedEdit() {
+        return isNeedEdit;
+    }
+
     public static class Builder extends BasePickerConfig.Builder {
         private boolean isNeedCamera;
+        private String editSavePath;
+        private boolean isNeedEdit;
         public Builder() {
             super();
         }
 
         public Builder isNeedCamera(boolean isNeedCamera) {
             this.isNeedCamera = isNeedCamera;
+            return this;
+        }
+
+        public Builder editSavePath(String editSavePath) {
+            this.editSavePath = editSavePath;
+            return this;
+        }
+        public Builder isNeedEdit(boolean isNeedEdit){
+            this.isNeedEdit = isNeedEdit;
             return this;
         }
         public Builder steepToolBarColor(int steepToolBarColor) {
@@ -42,6 +71,7 @@ public class ImagePickerConfig extends BasePickerConfig {
         }
 
         public ImagePickerConfig build() {
+            if (TextUtils.isEmpty(editSavePath)) editSavePath = DEFAULT_EDIT_SAVE_PATH;
             return new ImagePickerConfig(this);
         }
     }

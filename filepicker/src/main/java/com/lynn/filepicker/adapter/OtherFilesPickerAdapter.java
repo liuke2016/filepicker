@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -39,7 +40,7 @@ public class OtherFilesPickerAdapter extends BasePickerAdapter<OtherFile> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RelativeLayout itemView = new RelativeLayout(mContext);
-        itemView.setPadding(0,Util.dip2px(mContext,10),0,Util.dip2px(mContext,10));
+        itemView.setPadding(0,Util.dip2px(10),0,Util.dip2px(10));
         TypedValue typedValue = new TypedValue();
         mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
         int[] attribute = new int[]{android.R.attr.selectableItemBackground};
@@ -50,17 +51,20 @@ public class OtherFilesPickerAdapter extends BasePickerAdapter<OtherFile> {
         ImageView icFile = new ImageView(mContext);
         icFile.setId(R.id.iv_file);
         icFile.setImageResource(R.mipmap.ic_audio);
-        icFile.setPadding(Util.dip2px(mContext,10),0,0,0);
+        icFile.setPadding(Util.dip2px(10),0,0,0);
         RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL);
         itemView.addView(icFile,layoutParams1);
 
         ImageView ivCbx = new ImageView(mContext);
         ivCbx.setId(R.id.cbx);
-        ivCbx.setImageResource(R.drawable.selector_cbx_audio);
+        StateListDrawable drawable = new StateListDrawable();
+        drawable.addState(new int[]{android.R.attr.state_selected},mContext.getResources().getDrawable(R.mipmap.ic_checked_audio));
+        drawable.addState(new int[]{},mContext.getResources().getDrawable(R.mipmap.ic_uncheck_audio));
+        ivCbx.setImageDrawable(drawable);
         ivCbx.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        ivCbx.setPadding(0,0,Util.dip2px(mContext,10),0);
-        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(Util.dip2px(mContext,40), Util.dip2px(mContext,40));
+        ivCbx.setPadding(0,0,Util.dip2px(10),0);
+        RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(Util.dip2px(40), Util.dip2px(40));
         layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         layoutParams2.addRule(RelativeLayout.CENTER_VERTICAL);
         itemView.addView(ivCbx,layoutParams2);
@@ -68,7 +72,7 @@ public class OtherFilesPickerAdapter extends BasePickerAdapter<OtherFile> {
         LinearLayout llContainer = new LinearLayout(mContext);
         llContainer.setOrientation(LinearLayout.VERTICAL);
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        layoutParams3.setMargins(Util.dip2px(mContext,10),Util.dip2px(mContext,10),Util.dip2px(mContext,10),Util.dip2px(mContext,10));
+//        layoutParams3.setMargins(Util.dip2px(10),Util.dip2px(10),Util.dip2px(10),Util.dip2px(10));
         layoutParams3.addRule(RelativeLayout.RIGHT_OF,R.id.iv_file);
         layoutParams3.addRule(RelativeLayout.LEFT_OF,R.id.cbx);
         layoutParams3.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -95,7 +99,7 @@ public class OtherFilesPickerAdapter extends BasePickerAdapter<OtherFile> {
         holder.mTvTitle.setText(file.getName());
         holder.mTvTitle.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         if (holder.mTvTitle.getMeasuredWidth() >
-                Util.getScreenWidth(mContext) - Util.dip2px(mContext, 10 + 32 + 10 + 48 + 10 * 2)) {
+                Util.getScreenWidth() - Util.dip2px( 10 + 32 + 10 + 48 + 10 * 2)) {
             holder.mTvTitle.setLines(2);
         } else {
             holder.mTvTitle.setLines(1);

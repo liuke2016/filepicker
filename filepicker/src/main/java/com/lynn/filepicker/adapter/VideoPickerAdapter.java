@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -70,9 +71,12 @@ public class VideoPickerAdapter extends BasePickerAdapter<VideoFile> {
 
             ImageView ivCbx = new ImageView(mContext);
             ivCbx.setId(R.id.cbx);
-            ivCbx.setImageResource(R.drawable.selector_cbx_audio);
+            StateListDrawable drawable = new StateListDrawable();
+            drawable.addState(new int[]{android.R.attr.state_selected},mContext.getResources().getDrawable(R.mipmap.ic_checked_audio));
+            drawable.addState(new int[]{},mContext.getResources().getDrawable(R.mipmap.ic_uncheck_audio));
+            ivCbx.setImageDrawable(drawable);
             ivCbx.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(Util.dip2px(mContext,40), Util.dip2px(mContext,40));
+            RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(Util.dip2px(40), Util.dip2px(40));
             layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             itemView.addView(ivCbx,layoutParams2);
 
@@ -85,10 +89,10 @@ public class VideoPickerAdapter extends BasePickerAdapter<VideoFile> {
             tvDuration.setId(R.id.tv_duration);
             tvDuration.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
             tvDuration.setTextColor(Color.WHITE);
-            tvDuration.setPadding(0,0,Util.dip2px(mContext,5),0);
+            tvDuration.setPadding(0,0,Util.dip2px(5),0);
             tvDuration.setBackgroundColor(mContext.getResources().getColor(R.color.ShadowItem));
             tvDuration.setGravity(Gravity.RIGHT);
-            tvDuration.setPadding(0,Util.dip2px(mContext,2),0,Util.dip2px(mContext,2));
+            tvDuration.setPadding(0,Util.dip2px(2),0,Util.dip2px(2));
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             itemView.addView(tvDuration,layoutParams);

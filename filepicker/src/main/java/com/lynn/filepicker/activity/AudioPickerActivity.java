@@ -28,8 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AudioPickerActivity extends BasePickerActivity<AudioFile> {
-    protected boolean isNeedRecorder;
     public static final int REQUEST_CODE_TAKE_AUDIO = 0x101;
+
+    protected boolean isNeedRecorder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AudioPickerConfig config = (AudioPickerConfig) FilePicker.getPickerConfig();
@@ -79,9 +81,9 @@ public class AudioPickerActivity extends BasePickerActivity<AudioFile> {
     protected void onChangeFolder(FolderClickEvent folderClickEvent) {
         if (isNeedRecorder) {
             if (folderClickEvent.getPosition() > 0) {
-                mMenuRecord.setVisible(false);
+                mIvRecord.setVisibility(View.GONE);
             } else {
-                mMenuRecord.setVisible(true);
+                mIvRecord.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -95,7 +97,7 @@ public class AudioPickerActivity extends BasePickerActivity<AudioFile> {
     @Override
     public void showAllFiles(List<Folder> folders,boolean isRefresh) {
         super.showAllFiles(folders,isRefresh);
-        mMenuRecord.setVisible(isNeedRecorder);
+        mIvRecord.setVisibility(isNeedRecorder?View.VISIBLE:View.GONE);
     }
 
     @Override

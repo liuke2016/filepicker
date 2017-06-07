@@ -2,6 +2,7 @@ package com.lynn.filepicker.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -27,17 +28,19 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.lynn.filepicker.R;
 import com.lynn.filepicker.Util;
 
+import java.io.File;
+
 /**
  * Created by liuke on 2017/5/23.
  */
 
 public class ImageEditLayout extends FrameLayout {
-    private String[] colors = {"#FFFFFF", "#FF0000", "#A05000", "#50A000", "#00FF00", "#00A050", "#0050A0", "#0000FF", "#000000"};
+    private static final String[] colors = {"#FFFFFF", "#FF0000", "#A05000", "#50A000", "#00FF00", "#00A050", "#0050A0", "#0000FF", "#000000"};
     private int mCurrentColor = Color.WHITE;
     private ImageView mIvBack;
     private int screenWidth, screenHeight;
-    private  PaintConfigLayout mPaintConfigLayout;
-    private  TuyaView mTuyaView;
+    private PaintConfigLayout mPaintConfigLayout;
+    private TuyaView mTuyaView;
     private String mPath;
 
     public PaintConfigLayout getPaintConfigLayout() {
@@ -45,7 +48,7 @@ public class ImageEditLayout extends FrameLayout {
     }
 
     public ImageEditLayout(@NonNull Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ImageEditLayout(Context context, AttributeSet attrs) {
@@ -60,16 +63,15 @@ public class ImageEditLayout extends FrameLayout {
         addView(mTuyaView, lp2);
 
         mPaintConfigLayout = new PaintConfigLayout(context);
-        FrameLayout.LayoutParams lp1 = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(context, 50));
+        FrameLayout.LayoutParams lp1 = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(50));
         lp1.gravity = Gravity.BOTTOM;
         addView(mPaintConfigLayout, lp1);
 
     }
 
 
-    public boolean saveImage() {
-        mTuyaView.saveToSDCard(mPath);
-        return true;
+    public void saveImage(String path) {
+        mTuyaView.saveToSDCard(path + File.separator + new File(mPath).getName());
     }
 
 
@@ -99,11 +101,11 @@ public class ImageEditLayout extends FrameLayout {
             super(context);
 
             Drawable drawable = DrawableCompat.wrap(context.getResources().getDrawable(R.mipmap.ic_back_space));
-            DrawableCompat.setTintList(drawable, getResources().getColorStateList(R.color.selector_pen));
+            DrawableCompat.setTintList(drawable, new ColorStateList(new int[][]{new int[]{android.R.attr.state_pressed},new int[]{}},new int[]{Color.GREEN,Color.WHITE}));
             mIvBack = new ImageView(context);
             mIvBack.setImageDrawable(drawable);
             mIvBack.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            RelativeLayout.LayoutParams ivBackLp = new LayoutParams(Util.dip2px(context, 50), ViewGroup.LayoutParams.MATCH_PARENT);
+            RelativeLayout.LayoutParams ivBackLp = new LayoutParams(Util.dip2px(50), ViewGroup.LayoutParams.MATCH_PARENT);
             ivBackLp.addRule(ALIGN_PARENT_RIGHT);
             ivBackLp.addRule(CENTER_VERTICAL);
             addView(mIvBack, ivBackLp);
@@ -119,7 +121,7 @@ public class ImageEditLayout extends FrameLayout {
             setBackgroundColor(context.getResources().getColor(R.color.BgToolBar));
 
             mCurrentColor = Color.parseColor("#FFFFFF");
-            mStartX = Util.dip2px(getContext(), 25 + 4 + 20);
+            mStartX = Util.dip2px(25 + 4 + 20);
 
         }
 
@@ -186,7 +188,7 @@ public class ImageEditLayout extends FrameLayout {
 
         @Override
         public void onWindowFocusChanged(boolean hasWindowFocus) {
-            mLength = (int) (mIvBack.getX() - Util.dip2px(getContext(), 25 + 4 + 20)) / colors.length;
+            mLength = (int) (mIvBack.getX() - Util.dip2px(25 + 4 + 20)) / colors.length;
             mCurrentX = mStartX + mLength / 2;
             super.onWindowFocusChanged(hasWindowFocus);
         }
@@ -197,22 +199,22 @@ public class ImageEditLayout extends FrameLayout {
             Paint paint = new Paint();
             paint.setColor(mCurrentColor);
             paint.setAntiAlias(true);
-            canvas.drawCircle(Util.dip2px(getContext(), 25), getHeight() / 2, Util.dip2px(getContext(), 8), paint);
+            canvas.drawCircle(Util.dip2px(25), getHeight() / 2, Util.dip2px(8), paint);
 
-            canvas.drawRoundRect(new RectF(mCurrentX - Util.dip2px(getContext(), 3), getHeight() / 2 - Util.dip2px(getContext(), 10), mCurrentX + Util.dip2px(getContext(), 3), getHeight() / 2 + Util.dip2px(getContext(), 10)), Util.dip2px(getContext(), 5), Util.dip2px(getContext(), 5), paint);
+            canvas.drawRoundRect(new RectF(mCurrentX - Util.dip2px(3), getHeight() / 2 - Util.dip2px(10), mCurrentX + Util.dip2px(3), getHeight() / 2 + Util.dip2px(10)), Util.dip2px(5), Util.dip2px(5), paint);
 
             int startX = mStartX;
             for (int i = 0; i < colors.length; i++) {
                 paint.setColor(Color.parseColor(colors[i]));
-                Rect rect = new Rect(startX, getHeight() / 2 - Util.dip2px(getContext(), 4), startX + mLength, getHeight() / 2 + Util.dip2px(getContext(), 4));
+                Rect rect = new Rect(startX, getHeight() / 2 - Util.dip2px(4), startX + mLength, getHeight() / 2 + Util.dip2px(4));
                 canvas.drawRect(rect, paint);
                 startX += mLength;
             }
 
             paint.setColor(Color.WHITE);
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(Util.dip2px(getContext(), 1));
-            canvas.drawRoundRect(new RectF(mCurrentX - Util.dip2px(getContext(), 3), getHeight() / 2 - Util.dip2px(getContext(), 10), mCurrentX + Util.dip2px(getContext(), 3), getHeight() / 2 + Util.dip2px(getContext(), 10)), Util.dip2px(getContext(), 5), Util.dip2px(getContext(), 5), paint);
+            paint.setStrokeWidth(Util.dip2px(1));
+            canvas.drawRoundRect(new RectF(mCurrentX - Util.dip2px(3), getHeight() / 2 - Util.dip2px(10), mCurrentX + Util.dip2px(3), getHeight() / 2 + Util.dip2px(10)), Util.dip2px(5), Util.dip2px(5), paint);
         }
     }
 }

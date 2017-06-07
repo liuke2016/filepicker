@@ -19,10 +19,11 @@ import static com.lynn.filepicker.FilePicker.RESULT_PICK;
 
 public class ResultHandlerFragment<T extends BaseFile> extends Fragment {
 
+  public static final int REQUEST_CODE = 0x00100;
+
   PublishSubject<ArrayList<T>> resultSubject = PublishSubject.create();
   BehaviorSubject<Boolean> attachSubject = BehaviorSubject.create();
 
-  public static final int REQUEST_CODE = 0x00100;
 
 
   public PublishSubject<ArrayList<T>> getResultSubject() {

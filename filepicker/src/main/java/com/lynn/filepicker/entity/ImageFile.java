@@ -7,13 +7,43 @@ import android.os.Parcelable;
 
 public class ImageFile extends BaseFile implements Parcelable {
     private int orientation;   //0, 90, 180, 270
-
+    private int editCount;
+    private String editedPath;
     public int getOrientation() {
         return orientation;
     }
 
+    public int getEditCount() {
+        return editCount;
+    }
+
+    public void setEditCount(int editCount) {
+        this.editCount = editCount;
+    }
+
+    public String getEditedPath() {
+        return editedPath;
+    }
+
+    public void setEditedPath(String editedPath) {
+        this.editedPath = editedPath;
+    }
+
     public void setOrientation(int orientation) {
+
         this.orientation = orientation;
+    }
+
+    @Override
+    public String getPath() {
+        if(editedPath!=null){
+            return editedPath;
+        }
+        return path;
+    }
+
+    public String getSoucePath(){
+        return path;
     }
 
     @Override
@@ -27,6 +57,8 @@ public class ImageFile extends BaseFile implements Parcelable {
         dest.writeLong(getDate());
         dest.writeByte((byte) (isSelected() ? 1 : 0));
         dest.writeInt(orientation);
+        dest.writeInt(editCount);
+        dest.writeString(editedPath);
     }
 
     @Override
@@ -52,6 +84,8 @@ public class ImageFile extends BaseFile implements Parcelable {
             file.setDate(in.readLong());
             file.setSelected(in.readByte() != 0);
             file.setOrientation(in.readInt());
+            file.setEditCount(in.readInt());
+            file.setEditedPath(in.readString());
             return file;
         }
     };

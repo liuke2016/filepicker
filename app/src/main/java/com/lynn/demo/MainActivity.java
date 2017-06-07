@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.lynn.filepicker.FilePicker;
 import com.lynn.filepicker.config.AudioPickerConfig;
+import com.lynn.filepicker.config.ImagePickerConfig;
 import com.lynn.filepicker.config.OtherFilePickerConfig;
 import com.lynn.filepicker.config.VideoPickerConfig;
 import com.lynn.filepicker.entity.AudioFile;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.btn_pick_image).setOnClickListener(this);
+        findViewById(R.id.btn_pick_image_editable).setOnClickListener(this);
         findViewById(R.id.btn_pick_audio).setOnClickListener(this);
         findViewById(R.id.btn_pick_video).setOnClickListener(this);
         findViewById(R.id.btn_pick_file).setOnClickListener(this);
@@ -38,6 +40,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.btn_pick_image:
                 FilePicker.pickImage(this).subscribe(new Consumer<ArrayList<ImageFile>>() {
+                    @Override
+                    public void accept(ArrayList<ImageFile> imageFiles) throws Exception {
+                        StringBuilder builder = new StringBuilder();
+                        for (ImageFile file : imageFiles) {
+                            String path = file.getPath();
+                            builder.append(path + "\n");
+                        }
+                        mTvResult.setText(builder.toString());
+                    }
+                });
+                break;
+            case R.id.btn_pick_image_editable:
+                FilePicker.pickImage(this,new ImagePickerConfig.Builder()
+                        .isNeedEdit(true)
+                        .isNeedCamera(false)
+                        .build())
+                        .subscribe(new Consumer<ArrayList<ImageFile>>() {
                     @Override
                     public void accept(ArrayList<ImageFile> imageFiles) throws Exception {
                         StringBuilder builder = new StringBuilder();
@@ -66,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_pick_audio:
                 FilePicker.pickAudio(this, new AudioPickerConfig.Builder()
-                        .isNeedRecord(true)
+                        .isNeedRecord(false)
                         .maxNumber(5)
                         .steepToolBarColor(getResources().getColor(R.color.colorPrimary))
                         .build())

@@ -29,8 +29,9 @@ import java.util.Locale;
 import static android.os.Environment.DIRECTORY_DCIM;
 
 public class VideoPickerActivity extends BasePickerActivity<VideoFile> {
-    protected boolean isNeedCamera;
     public static final int REQUEST_CODE_TAKE_VIDEO = 0x101;
+
+    protected boolean isNeedCamera;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

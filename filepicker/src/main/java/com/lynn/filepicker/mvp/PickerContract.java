@@ -1,7 +1,9 @@
 package com.lynn.filepicker.mvp;
 
+import com.lynn.filepicker.entity.BaseFile;
 import com.lynn.filepicker.entity.Folder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -20,6 +22,7 @@ public interface PickerContract {
         void showMessage(String message);
     }
     interface IPickerPresenter{
+        void loadAllFiles(boolean isRefresh, ArrayList<BaseFile> selectedFiles);
         void loadAllFiles(boolean isRefresh);
     }
 

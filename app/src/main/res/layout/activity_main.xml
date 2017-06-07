@@ -4,14 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:orientation="vertical"
-    android:layout_height="match_parent"
-    tools:context="com.evergrande.filepicker.com.lynn.filepicker.MainActivity">
+    android:layout_height="match_parent">
 
     <Button
         android:id="@+id/btn_pick_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/pick_image"/>
+
+    <Button
+        android:id="@+id/btn_pick_image_editable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pick_image_editable"/>
 
     <Button
         android:id="@+id/btn_pick_video"

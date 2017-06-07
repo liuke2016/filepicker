@@ -10,6 +10,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Looper;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.v4.view.ViewCompat;
@@ -22,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.bumptech.glide.Glide;
 import com.lynn.filepicker.mvp.PickerContract;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -35,7 +37,7 @@ public class Util {
     public static float DEFAULT_ALPHA = Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? 0.2f : 0.3f;
     private static final int COLOR_INVALID_VAL = -1;
 
-    public static Application mContext;
+    private static Application mContext;
 
 
     public static Context getContext() {
@@ -82,27 +84,27 @@ public class Util {
         }
     }
 
-    public static int getScreenWidth(Context ctx) {
-        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+    public static int getScreenWidth() {
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
         return dm.widthPixels;
     }
 
-    public static int getScreenHeight(Context ctx) {
-        WindowManager wm = (WindowManager) ctx.getSystemService(Context.WINDOW_SERVICE);
+    public static int getScreenHeight() {
+        WindowManager wm = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(dm);
         return dm.heightPixels;
     }
 
-    public static int dip2px(Context context, float dpValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int dip2px(float dpValue) {
+        final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
     }
 
-    public static int px2dip(Context context, float pxValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
+    public static int px2dip(float pxValue) {
+        final float scale = getContext().getResources().getDisplayMetrics().density;
         return (int) (pxValue / scale + 0.5f);
     }
 
@@ -327,6 +329,40 @@ public class Util {
 
     public static String extractDirectory(String path) {
         return path.substring(0, path.lastIndexOf("/"));
+    }
+
+
+    private static void clearImageDiskCache() {
+        try {
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.get(getContext()).clearDiskCache();
+                    }
+                }).start();
+            } else {
+                Glide.get(getContext()).clearDiskCache();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void clearImageMemoryCache() {
+        try {
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                Glide.get(getContext()).clearMemory();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void clearImageAllCache() {
+        clearImageDiskCache();
+        clearImageMemoryCache();
     }
 
     public interface RequestPermission {

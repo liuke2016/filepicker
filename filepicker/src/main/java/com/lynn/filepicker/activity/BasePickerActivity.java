@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.graphics.Color;
@@ -16,14 +17,13 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.DrawableRes;
 import android.support.design.widget.Snackbar;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,37 +63,37 @@ import static com.lynn.filepicker.activity.ImageBrowserActivity.IMAGE_BROWSER_LI
 import static com.lynn.filepicker.activity.ImageBrowserActivity.IMAGE_BROWSER_SELECTED_NUMBER;
 
 public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatActivity implements PickerContract.IPickerView {
-    protected BasePickerPresenter mPresenter;
-    protected Toolbar mToolBar;
-    protected MenuItem mMenuDone;
-    protected MenuItem mMenuRecord;
+    public static final int COLUMN_NUMBER = 3;
     protected int mMaxNumber;
+
+    protected BasePickerPresenter mPresenter;
+
+    protected Toolbar mToolBar;
     protected BasePickerAdapter<T> mAdapter;
     protected RecyclerView mRecyclerView;
-    public static final int COLUMN_NUMBER = 3;
-
     protected TextView mTvTime;
-
     private RelativeLayout mRlBottomContainer;
-
     protected TextView mTvFolder;
     protected FolderDialog mFolderDialog;
     protected ProgressBar mProgressBar;
-    private ObjectAnimator mShowTimeAnim;
-    private ObjectAnimator mHideTimeAnim;
-    private Runnable mHideAnimTask;
-    private float mStartY;
-
-    private boolean mIsLoadDataComplete;
-    private Disposable mFileClickDisposable;
-    private Disposable mFolderClickDisposable;
     protected TextView mTvPreview;
     protected LinearLayout mContentView;
     private LinearLayout mEmptyView;
     private ImageView mEmptyImageView;
     private TextView mEmptyTextView;
     private TextView mTvTip;
+
+    private ObjectAnimator mShowTimeAnim;
+    private ObjectAnimator mHideTimeAnim;
+    private Runnable mHideAnimTask;
+    private float mStartY;
+    private boolean mIsLoadDataComplete;
+    private Disposable mFileClickDisposable;
+    private Disposable mFolderClickDisposable;
+
     private FileObserver mFileObserver;
+    protected TextView mTvDone;
+    protected ImageView mIvRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,10 +108,9 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         initView();
         initEvent();
         mFileObserver = new FileObserver(new Handler());
-        getContentResolver().registerContentObserver(getExternalContentUri(), true,mFileObserver );
+        getContentResolver().registerContentObserver(getExternalContentUri(), true, mFileObserver);
     }
 
-    abstract protected Uri getExternalContentUri();
 
     private void initView() {
         setTheme(R.style.ToolbarTheme);
@@ -123,18 +122,68 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         mContentView = new LinearLayout(this);
         mContentView.setOrientation(LinearLayout.VERTICAL);
         mToolBar = new Toolbar(this);
-        mToolBar.setTitleTextColor(Color.WHITE);
-        mToolBar.setTitle(getToolbarTitle());
+        TextView tvTitle =  new TextView(this);
+        tvTitle.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        tvTitle.setGravity(Gravity.CENTER_VERTICAL);
+        tvTitle.setTextColor(Color.WHITE);
+        tvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP,17);
+        tvTitle.setText(getToolbarTitle());
+        mToolBar.addView(tvTitle);
+
+        mTvDone = new TextView(this);
+        Toolbar.LayoutParams layoutParams5 = new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams5.gravity = Gravity.RIGHT;
+        layoutParams5.rightMargin = Util.dip2px(8);
+        mTvDone.setGravity(Gravity.CENTER_VERTICAL);
+        mTvDone.setTextColor(Color.WHITE);
+        mTvDone.setTextSize(TypedValue.COMPLEX_UNIT_SP,17);
+        mTvDone.setText(getString(R.string.confirm) + "(" + 0 + "/" + mMaxNumber + ")");
+        mToolBar.addView(mTvDone,layoutParams5);
+        mTvDone.setVisibility(View.GONE);
+
+        mIvRecord = new ImageView(this);
+        mIvRecord.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        mIvRecord.setImageResource(R.mipmap.ic_record_audio);
+        mIvRecord.setVisibility(View.GONE);
+        Toolbar.LayoutParams layoutParams6 = new Toolbar.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams6.gravity = Gravity.RIGHT;
+        layoutParams6.rightMargin = Util.dip2px(15);
+        mToolBar.addView(mIvRecord,layoutParams6);
+        mIvRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Util.launchRecorder(new Util.RequestPermission() {
+                    @Override
+                    public void onRequestPermissionSuccess() {
+                        Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
+                        startActivityForResult(intent, REQUEST_CODE_TAKE_AUDIO);
+                    }
+                }, BasePickerActivity.this);
+            }
+        });
+
         int toolBarColor = FilePicker.getPickerConfig().getSteepToolBarColor();
         if (toolBarColor != 0) {
             mToolBar.setBackgroundColor(toolBarColor);
         } else {
             mToolBar.setBackgroundColor(getResources().getColor(R.color.BgToolBar));
         }
+        Drawable icBack = getResources().getDrawable(R.mipmap.ic_back);
         int toolBarTitleTextColor = FilePicker.getPickerConfig().getToolBarTextColor();
         if (toolBarTitleTextColor != 0) {
             mToolBar.setTitleTextColor(toolBarTitleTextColor);
+            tvTitle.setTextColor(toolBarTitleTextColor);
+            mTvDone.setTextColor(toolBarTitleTextColor);
+            DrawableCompat.setTint(icBack,toolBarTitleTextColor);
         }
+        mToolBar.setNavigationIcon(icBack);
+        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         LinearLayout.LayoutParams tbLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) actionBarSize);
         mToolBar.setLayoutParams(tbLp);
         mContentView.addView(mToolBar);
@@ -147,19 +196,20 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
 
 
         mRlBottomContainer = new RelativeLayout(this);
-        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(this, 50));
+        LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(50));
         mRlBottomContainer.setBackgroundColor(Color.parseColor("#373B3E"));
         mRlBottomContainer.setVisibility(View.GONE);
         mTvFolder = new TextView(this);
         mTvFolder.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        mTvFolder.setTextColor(Color.WHITE);
+        ColorStateList colorStateList = new ColorStateList(new int[][]{new int[]{android.R.attr.state_pressed},new int[]{}},new int[]{Color.GRAY,Color.WHITE});
+        mTvFolder.setTextColor(colorStateList);
         mTvFolder.setGravity(Gravity.CENTER_VERTICAL);
         Drawable drawable = getResources().getDrawable(R.mipmap.ic_select_album);
         drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
         mTvFolder.setCompoundDrawables(null, null, drawable, null);
         RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams3.addRule(RelativeLayout.CENTER_VERTICAL);
-        layoutParams3.leftMargin = Util.dip2px(this, 15);
+        layoutParams3.leftMargin = Util.dip2px(15);
         mTvFolder.setLayoutParams(layoutParams3);
         mTvPreview = new TextView(this);
         mTvPreview.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
@@ -169,7 +219,7 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParams4.addRule(RelativeLayout.CENTER_VERTICAL);
         layoutParams4.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutParams4.rightMargin = Util.dip2px(this, 15);
+        layoutParams4.rightMargin = Util.dip2px(15);
         mTvPreview.setLayoutParams(layoutParams4);
         mTvPreview.setVisibility(View.GONE);
         mTvPreview.setEnabled(false);
@@ -184,12 +234,12 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         mTvTime = new TextView(this);
         mTvTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         mTvTime.setTextColor(Color.WHITE);
-        mTvTime.setPadding(Util.dip2px(this, 10), 0, 0, 0);
+        mTvTime.setPadding(Util.dip2px(10), 0, 0, 0);
         mTvTime.setGravity(Gravity.CENTER_VERTICAL);
         mTvTime.setBackgroundColor(Color.parseColor("#66000000"));
         mTvTime.setAlpha(0);
         mTvTime.setVisibility(View.GONE);
-        FrameLayout.LayoutParams layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(this, 25));
+        FrameLayout.LayoutParams layoutParams1 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(25));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             layoutParams1.topMargin = (int) actionBarSize + Util.getStatusBarHeight(this);
         } else {
@@ -208,14 +258,14 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         mEmptyView.setGravity(Gravity.CENTER);
         mEmptyView.setOrientation(LinearLayout.VERTICAL);
         mEmptyImageView = new ImageView(this);
-        mEmptyImageView.setLayoutParams(new LinearLayout.LayoutParams(Util.dip2px(this, 76), Util.dip2px(this, 76)));
+        mEmptyImageView.setLayoutParams(new LinearLayout.LayoutParams(Util.dip2px(76), Util.dip2px(76)));
         mEmptyTextView = new TextView(this);
         mEmptyTextView.setGravity(Gravity.CENTER);
-        mEmptyTextView.setPadding(Util.dip2px(this, 5), Util.dip2px(this, 5), Util.dip2px(this, 5), Util.dip2px(this, 5));
+        mEmptyTextView.setPadding(Util.dip2px(5), Util.dip2px(5), Util.dip2px(5), Util.dip2px(5));
         mEmptyTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
         mEmptyTextView.setText(R.string.empty);
         mTvTip = new TextView(this);
-        mTvTip.setPadding(Util.dip2px(this, 5), Util.dip2px(this, 5), Util.dip2px(this, 5), Util.dip2px(this, 5));
+        mTvTip.setPadding(Util.dip2px(5), Util.dip2px(5), Util.dip2px(5), Util.dip2px(5));
         mTvTip.setTextColor(Color.parseColor("#727272"));
         mTvTip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
         ViewGroup.LayoutParams tvLp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -226,8 +276,6 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         addContentView(mEmptyView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mEmptyView.setVisibility(View.GONE);
 
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFolderDialog = new FolderDialog(this);
 
@@ -349,7 +397,7 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
                 .subscribe(new Consumer<FileClickEvent>() {
                     @Override
                     public void accept(@NonNull FileClickEvent fileClickEvent) throws Exception {
-                        mMenuDone.setTitle(getString(R.string.confirm) + "(" + mAdapter.getSelectedList().size() + "/" + mMaxNumber + ")");
+                        mTvDone.setText(getString(R.string.confirm) + "(" + mAdapter.getSelectedList().size() + "/" + mMaxNumber + ")");
 
                         onSelectFile();
 
@@ -361,8 +409,19 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
                 Intent intent = new Intent(BasePickerActivity.this, ImageBrowserActivity.class);
                 intent.putParcelableArrayListExtra(IMAGE_BROWSER_LIST, mAdapter.getSelectedList());
                 intent.putExtra(IMAGE_BROWSER_SELECTED_NUMBER, mAdapter.getSelectedList().size());
+                intent.putExtra("is_preview",true);
                 startActivityForResult(intent, ImagePickerActivity.REQUEST_CODE_BROWSER_IMAGE);
                 overridePendingTransition(R.anim.zoom_in, 0);
+            }
+        });
+
+        mTvDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putParcelableArrayListExtra(FilePicker.RESULT_PICK, mAdapter.getSelectedList());
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }
@@ -407,8 +466,9 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         }
     }
 
-    protected abstract void loadFiles(boolean isRefresh);
+    protected abstract Uri getExternalContentUri();
 
+    protected abstract void loadFiles(boolean isRefresh);
 
     protected void onSelectFile() {
 
@@ -444,7 +504,7 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
     public void showAllFiles(final List<Folder> folders, boolean isRefresh) {
 
         mRlBottomContainer.setVisibility(View.VISIBLE);
-        mMenuDone.setVisible(true);
+        mTvDone.setVisibility(View.VISIBLE);
         List<BaseFile> files = new ArrayList<>();
         files.addAll(folders.get(0).getFiles());
         if (isRefresh) {
@@ -490,37 +550,6 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
         return super.dispatchTouchEvent(ev);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        mMenuRecord = menu.findItem(R.id.action_record);
-        mMenuDone = menu.findItem(R.id.action_done);
-        mMenuDone.setVisible(false);
-        mMenuDone.setTitle(getString(R.string.confirm) + "(" + mAdapter.getSelectedList().size() + "/" + mMaxNumber + ")");
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_done) {
-            Intent intent = new Intent();
-            intent.putParcelableArrayListExtra(FilePicker.RESULT_PICK, mAdapter.getSelectedList());
-            setResult(RESULT_OK, intent);
-            finish();
-            return true;
-        } else if (id == R.id.action_record) {
-            Util.launchRecorder(new Util.RequestPermission() {
-                @Override
-                public void onRequestPermissionSuccess() {
-                    Intent intent = new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION);
-                    startActivityForResult(intent, REQUEST_CODE_TAKE_AUDIO);
-                }
-            }, this);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void finish() {
@@ -548,7 +577,7 @@ public abstract class BasePickerActivity<T extends BaseFile> extends AppCompatAc
 
         @Override
         public void onChange(boolean selfChange) {
-            loadFiles(false);
+            mPresenter.loadAllFiles(true,mAdapter.getSelectedList());
         }
     }
 }

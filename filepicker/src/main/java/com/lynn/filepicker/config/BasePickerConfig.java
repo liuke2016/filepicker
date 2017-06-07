@@ -46,7 +46,6 @@ public class BasePickerConfig {
 
         }
 
-
         public Builder steepToolBarColor(int steepToolBarColor) {
             this.steepToolBarColor = steepToolBarColor;
             return this;
@@ -61,9 +60,6 @@ public class BasePickerConfig {
             this.maxNumber = maxNumber;
             return this;
         }
-
-
-
     }
 
 

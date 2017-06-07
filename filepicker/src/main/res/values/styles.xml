@@ -8,12 +8,6 @@
         <!-- 控制ToolBar右侧Menu弹出的位置 -->
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
 
-        <!-- 单独配置ToolBar右侧Menu按钮即三个小圆点的颜色 -->
-        <!--<item name="colorControlNormal">#FFFFFF</item>-->
-
-        <!-- 配置所有字体颜色 -->
-        <!--<item name="android:textColorPrimary">#FFFFFF</item>-->
-
         <!-- RecyclerView分割线 -->
         <item name="android:listDivider">@drawable/divider_rv</item>
     </style>

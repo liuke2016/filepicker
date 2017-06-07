@@ -3,6 +3,7 @@ package com.lynn.filepicker.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -13,8 +14,10 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.bumptech.glide.DrawableRequestBuilder;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.signature.StringSignature;
 import com.lynn.filepicker.FilePicker;
 import com.lynn.filepicker.R;
 import com.lynn.filepicker.RxBus;
@@ -63,22 +66,33 @@ public class ImagePickerAdapter extends BasePickerAdapter<ImageFile> {
             ImageView ivThumbnail = new ImageView(mContext);
             ivThumbnail.setId(R.id.iv_thumbnail);
             ivThumbnail.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            itemView.addView(ivThumbnail,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT));
+            itemView.addView(ivThumbnail, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
             ImageView ivCbx = new ImageView(mContext);
             ivCbx.setId(R.id.cbx);
-            ivCbx.setImageResource(R.drawable.selector_cbx_audio);
+            StateListDrawable drawable = new StateListDrawable();
+            drawable.addState(new int[]{android.R.attr.state_selected},mContext.getResources().getDrawable(R.mipmap.ic_checked_audio));
+            drawable.addState(new int[]{},mContext.getResources().getDrawable(R.mipmap.ic_uncheck_audio));
+            ivCbx.setImageDrawable(drawable);
             ivCbx.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(Util.dip2px(mContext,40), Util.dip2px(mContext,40));
+            RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(Util.dip2px(40), Util.dip2px(40));
             layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            itemView.addView(ivCbx,layoutParams2);
+            itemView.addView(ivCbx, layoutParams2);
+
+            ImageView ivEdited = new ImageView(mContext);
+            ivEdited.setId(R.id.iv_edited);
+            ivEdited.setImageResource(R.mipmap.ic_edited_pic);
+            ivEdited.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(Util.dip2px(40), Util.dip2px(40));
+            layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            itemView.addView(ivEdited, layoutParams3);
 
             View shadow = new View(mContext);
             shadow.setId(R.id.shadow);
             shadow.setBackgroundColor(mContext.getResources().getColor(R.color.ShadowItem));
             shadow.setVisibility(View.INVISIBLE);
 
-            itemView.addView(shadow,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            itemView.addView(shadow, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             return new ImagePickViewHolder(itemView);
         } else {
             View itemView = initIvCamera();
@@ -129,16 +143,20 @@ public class ImagePickerAdapter extends BasePickerAdapter<ImageFile> {
             } else {
                 file = mFiles.get(position);
             }
-
-            Glide.with(mContext)
-                    .load(file.getPath())
+            RequestManager requestManager = Glide.with(mContext);
+            DrawableRequestBuilder requestBuilder = null;
+            if (file.getEditCount() > 0) {
+                requestBuilder = requestManager.load(file.getEditedPath())
+                        .signature(new StringSignature(file.getEditCount() + ""));
+                imagePickViewHolder.mIvEdited.setVisibility(View.VISIBLE);
+            } else {
+                requestBuilder = requestManager.load(file.getPath());
+                imagePickViewHolder.mIvEdited.setVisibility(View.GONE);
+            }
+            requestBuilder
                     .centerCrop()
                     .crossFade()
-                    .skipMemoryCache(true)
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .placeholder(R.mipmap.ic_place_holder)
-                    .error(R.mipmap.ic_place_holder)
-                    .into(imagePickViewHolder.mIvThumbnail);
+                    .placeholder(R.mipmap.ic_place_holder).into(imagePickViewHolder.mIvThumbnail);
 
             if (file.isSelected()) {
                 imagePickViewHolder.mCbx.setSelected(true);
@@ -205,12 +223,14 @@ public class ImagePickerAdapter extends BasePickerAdapter<ImageFile> {
         private ImageView mIvThumbnail;
         private View mShadow;
         private ImageView mCbx;
+        private ImageView mIvEdited;
 
         ImagePickViewHolder(View itemView) {
             super(itemView);
             mIvThumbnail = (ImageView) itemView.findViewById(R.id.iv_thumbnail);
             mShadow = itemView.findViewById(R.id.shadow);
             mCbx = (ImageView) itemView.findViewById(R.id.cbx);
+            mIvEdited = (ImageView) itemView.findViewById(R.id.iv_edited);
         }
     }
 

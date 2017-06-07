@@ -21,14 +21,15 @@ import com.lynn.filepicker.Util;
  */
 
 public class HideAbleToolbar extends Toolbar {
-    private ObjectAnimator mFadeIn1;
-    private ObjectAnimator mFadeOut1;
-    private ObjectAnimator mFadeIn2;
-    private ObjectAnimator mFadeOut2;
     private static final boolean AUTO_HIDE = false;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 300;
     private static final int ANIMATOR_DURATION = 250;
+
+    private ObjectAnimator mFadeIn1;
+    private ObjectAnimator mFadeOut1;
+    private ObjectAnimator mFadeIn2;
+    private ObjectAnimator mFadeOut2;
 
     private boolean mVisible = true;
     private  Runnable mHideStatusBarRunnable;

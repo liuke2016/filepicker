@@ -18,7 +18,7 @@ import com.lynn.filepicker.adapter.ImagePickerAdapter;
 import com.lynn.filepicker.config.ImagePickerConfig;
 import com.lynn.filepicker.entity.BaseFile;
 import com.lynn.filepicker.entity.ImageFile;
-import com.lynn.filepicker.entity.event.EditImageEvent;
+import com.lynn.filepicker.entity.event.EditImageEvent2;
 import com.lynn.filepicker.entity.event.FolderClickEvent;
 import com.lynn.filepicker.entity.event.ImageBrowserPickEvent;
 import com.lynn.filepicker.mvp.ImagePickerPresenter;
@@ -37,10 +37,11 @@ import io.reactivex.functions.Consumer;
 import static android.os.Environment.DIRECTORY_DCIM;
 
 public class ImagePickerActivity extends BasePickerActivity<ImageFile> {
-    protected boolean isNeedCamera;
-    private Disposable mPickImageWhenPreview;
     public static final int REQUEST_CODE_TAKE_IMAGE = 0x101;
     public static final int REQUEST_CODE_BROWSER_IMAGE = 0x102;
+
+    protected boolean isNeedCamera;
+    private Disposable mPickImageWhenPreview;
     private Disposable mEditComplete;
 
     @Override
@@ -95,7 +96,7 @@ public class ImagePickerActivity extends BasePickerActivity<ImageFile> {
                             }
                         }
                         ArrayList<ImageFile> selectedList = mAdapter.getSelectedList();
-                        if(selectedList.size()==0){
+                        if (selectedList.size() == 0) {
                             selectedList.add(imageFile);
                             return;
                         }
@@ -115,11 +116,12 @@ public class ImagePickerActivity extends BasePickerActivity<ImageFile> {
                     }
                 });
 
-        mEditComplete = RxBus.getDefault().toObservable(EditImageEvent.class)
-                .subscribe(new Consumer<EditImageEvent>() {
+        mEditComplete = RxBus.getDefault().toObservable(EditImageEvent2.class)
+                .subscribe(new Consumer<EditImageEvent2>() {
                     @Override
-                    public void accept(EditImageEvent editImageEvent) throws Exception {
-                        mAdapter.notifyItemChanged(editImageEvent.getIndex());
+                    public void accept(EditImageEvent2 editImageEvent2) throws Exception {
+                        ((ImagePickerPresenter) mPresenter).syncImageFile(mAdapter.getDataSet().get(editImageEvent2.getIndex()));
+                        mAdapter.notifyItemChanged(editImageEvent2.getIndex());
                     }
                 });
     }
@@ -179,8 +181,7 @@ public class ImagePickerActivity extends BasePickerActivity<ImageFile> {
                     mediaScanIntent.setData(contentUri);
                     sendBroadcast(mediaScanIntent);
                     showLoading();
-//                    loadFiles(true);
-                    mMenuDone.setTitle(getString(R.string.confirm) + "(" + mAdapter.getSelectedList().size() + "/" + mMaxNumber + ")");
+                    mTvDone.setText(getString(R.string.confirm) + "(" + mAdapter.getSelectedList().size() + "/" + mMaxNumber + ")");
                 }
                 break;
             case REQUEST_CODE_BROWSER_IMAGE:
@@ -195,7 +196,7 @@ public class ImagePickerActivity extends BasePickerActivity<ImageFile> {
                         mTvPreview.setEnabled(false);
                     }
                     imagePickerAdapter.notifyDataSetChanged();
-                    mMenuDone.setTitle(getString(R.string.confirm) + "(" + imagePickerAdapter.getSelectedList().size() + "/" + mMaxNumber + ")");
+                    mTvDone.setText(getString(R.string.confirm) + "(" + imagePickerAdapter.getSelectedList().size() + "/" + mMaxNumber + ")");
                 }
                 break;
         }

@@ -6,6 +6,7 @@
     <item name="tv_duration" type="id"/>
     <item name="cbx" type="id"/>
     <item name="iv_thumbnail" type="id"/>
+    <item name="iv_edited" type="id"/>
     <item name="shadow" type="id"/>
     <item name="view" type="id"/>
     <item name="iv_folder" type="id"/>

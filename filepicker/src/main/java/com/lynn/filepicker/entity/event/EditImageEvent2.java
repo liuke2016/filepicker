@@ -4,11 +4,11 @@ package com.lynn.filepicker.entity.event;
  * Created by liuke on 2017/5/24.
  */
 
-public class EditImageEvent {
+public class EditImageEvent2 {
 
     private int index;
 
-    public EditImageEvent(int index) {
+    public EditImageEvent2(int index) {
         this.index = index;
     }
 

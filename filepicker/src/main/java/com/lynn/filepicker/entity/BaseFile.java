@@ -8,7 +8,7 @@ import android.os.Parcelable;
 public class BaseFile implements Parcelable {
     private long id;
     private String name;
-    private String path;
+    protected String path;
     private long size;   //byte
     private String bucketId;  //Folder ID
     private String bucketName;  //Folder Name

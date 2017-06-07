@@ -34,8 +34,6 @@ import com.lynn.filepicker.entity.event.FolderClickEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lynn.filepicker.Util.mContext;
-
 /**
  * Created by liuke on 2017/4/11.
  */
@@ -65,7 +63,7 @@ public class FolderDialog extends Dialog {
         WindowManager.LayoutParams p = getWindow().getAttributes();
         p.height = (int) (d.getHeight() * 0.7);
         p.width = d.getWidth();
-        p.y = Util.dip2px(getContext(), 50);
+        p.y = Util.dip2px(50);
         getWindow().setAttributes(p);
 
     }
@@ -91,17 +89,17 @@ public class FolderDialog extends Dialog {
         public DirectoryHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 //            View itemView = LayoutInflater.from(getContext()).inflate(R.layout.layout_item_dialog_directory,parent,false);
             RelativeLayout itemView = new RelativeLayout(getContext());
-            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(getContext(), 80)));
+            itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(80)));
             TypedValue typedValue = new TypedValue();
-            mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+            Util.getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
             int[] attribute = new int[]{android.R.attr.selectableItemBackground};
-            TypedArray typedArray = mContext.obtainStyledAttributes(typedValue.resourceId, attribute);
+            TypedArray typedArray = Util.getContext().obtainStyledAttributes(typedValue.resourceId, attribute);
             Drawable selectableItemBackground = typedArray.getDrawable(0);
             itemView.setBackgroundDrawable(selectableItemBackground);
 
             LinearLayout llContainer = new LinearLayout(getContext());
             llContainer.setOrientation(LinearLayout.VERTICAL);
-            llContainer.setPadding(Util.dip2px(getContext(), 10), 0, 0, 0);
+            llContainer.setPadding(Util.dip2px(10), 0, 0, 0);
             RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             layoutParams4.addRule(RelativeLayout.RIGHT_OF, R.id.iv_folder);
 
@@ -114,7 +112,7 @@ public class FolderDialog extends Dialog {
             llContainer.addView(tvDirectoryName, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 0, 1));
 
             Space space = new Space(getContext());
-            llContainer.addView(space,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,Util.dip2px(getContext(),10)));
+            llContainer.addView(space, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(10)));
 
             TextView tvFileCount = new TextView(getContext());
             tvFileCount.setId(R.id.tv_file_count);
@@ -130,7 +128,7 @@ public class FolderDialog extends Dialog {
             ivFolder.setId(R.id.iv_folder);
             ivFolder.setImageResource(R.mipmap.ic_folder);
             ivFolder.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(Util.dip2px(getContext(), 70), Util.dip2px(getContext(), 70));
+            RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(Util.dip2px(70), Util.dip2px(70));
             layoutParams1.addRule(RelativeLayout.CENTER_VERTICAL);
             layoutParams1.addRule(RelativeLayout.ALIGN_LEFT, R.id.view);
             itemView.addView(ivFolder, layoutParams1);
@@ -139,21 +137,21 @@ public class FolderDialog extends Dialog {
             ImageView ivIsSelected = new ImageView(getContext());
             ivIsSelected.setId(R.id.iv_is_selected);
             ivIsSelected.setImageResource(R.mipmap.ic_is_checked);
-            ivIsSelected.setPadding(Util.dip2px(getContext(), 10), 0, 0, 0);
+            ivIsSelected.setPadding(Util.dip2px(10), 0, 0, 0);
             RelativeLayout.LayoutParams layoutParams3 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams3.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             layoutParams3.addRule(RelativeLayout.CENTER_VERTICAL);
-            layoutParams3.rightMargin = Util.dip2px(getContext(), 10);
+            layoutParams3.rightMargin = Util.dip2px(10);
             itemView.addView(ivIsSelected, layoutParams3);
 
             View cut = new View(getContext());
             cut.setId(R.id.view);
             RelativeLayout.LayoutParams layoutParams2 = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1);
-            layoutParams2.leftMargin = Util.dip2px(getContext(),10);
-            layoutParams2.rightMargin = Util.dip2px(getContext(),10);
+            layoutParams2.leftMargin = Util.dip2px(10);
+            layoutParams2.rightMargin = Util.dip2px(10);
             layoutParams2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             cut.setBackgroundColor(Color.parseColor("#cccccc"));
-            itemView.addView(cut,layoutParams2);
+            itemView.addView(cut, layoutParams2);
 
             return new DirectoryHolder(itemView);
         }

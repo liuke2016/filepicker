@@ -8,13 +8,13 @@ Grab via Maven:
 <dependency>
   <groupId>com.lynn.filepicker</groupId>
   <artifactId>filepicker</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <type>pom</type>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.lynn.filepicker:filepicker:1.0.4'
+compile 'com.lynn.filepicker:filepicker:1.0.5'
 ```
 
 
@@ -27,7 +27,18 @@ compile 'com.lynn.filepicker:filepicker:1.0.4'
 				//do something
 			}
 		});
-		
+
+	FilePicker.pickImage(this,new ImagePickerConfig.Builder()
+                         .isNeedEdit(true)
+                         .isNeedCamera(false)
+            .build())
+		.subscribe(new Consumer<ArrayList<ImageFile>>() {
+			@Override
+			public void accept(ArrayList<ImageFile> imageFiles) throws Exception {
+				//do something
+			}
+		});
+
 	FilePicker.pickImage(this, new ImagePickerConfig.Builder()
                         .isNeedCamera(true)
                         .maxNumber(5)

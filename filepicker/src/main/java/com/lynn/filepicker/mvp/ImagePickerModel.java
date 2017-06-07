@@ -5,9 +5,11 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 
+import com.lynn.filepicker.FilePicker;
 import com.lynn.filepicker.R;
 import com.lynn.filepicker.Util;
-import com.lynn.filepicker.entity.BaseFile;
+import com.lynn.filepicker.config.ImagePickerConfig;
+import com.lynn.filepicker.db.ImageDao;
 import com.lynn.filepicker.entity.Folder;
 import com.lynn.filepicker.entity.ImageFile;
 
@@ -44,9 +46,11 @@ public class ImagePickerModel implements PickerContract.IPickerModel {
             ORIENTATION
     };
     private final Context mContext;
+    private final ImageDao mImageDao;
 
     public ImagePickerModel() {
         mContext = Util.getContext();
+        mImageDao = new ImageDao(mContext);
     }
 
 
@@ -64,7 +68,7 @@ public class ImagePickerModel implements PickerContract.IPickerModel {
             cursor.moveToPosition(-1);
         }
         List<Folder> folders = new ArrayList<>();
-        List<BaseFile> imageFiles = new ArrayList<>();
+        List<ImageFile> imageFiles = new ArrayList<>();
         while (cursor.moveToNext()) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
@@ -73,7 +77,8 @@ public class ImagePickerModel implements PickerContract.IPickerModel {
                 continue;
             }
             ImageFile img = new ImageFile();
-            img.setId(cursor.getLong(cursor.getColumnIndexOrThrow(_ID)));
+            long id = cursor.getLong(cursor.getColumnIndexOrThrow(_ID));
+            img.setId(id);
             img.setName(cursor.getString(cursor.getColumnIndexOrThrow(TITLE)));
             img.setPath(cursor.getString(cursor.getColumnIndexOrThrow(DATA)));
             img.setSize(cursor.getLong(cursor.getColumnIndexOrThrow(SIZE)));
@@ -96,11 +101,20 @@ public class ImagePickerModel implements PickerContract.IPickerModel {
                 folders.get(folders.indexOf(folder)).addFile(img);
             }
         }
+        ImagePickerConfig config = (ImagePickerConfig) FilePicker.getPickerConfig();
+        if(config.isNeedEdit()){
+            for(ImageFile imageFile:imageFiles){
+                mImageDao.find(imageFile);
+            }
+        }
         Folder all = new Folder();
         all.setName(mContext.getString(R.string.all));
         all.setFiles(imageFiles);
         all.setSelected(true);
         folders.add(0, all);
         return folders;
+    }
+    public void syncImageFile(ImageFile file){
+        mImageDao.find(file);
     }
 }
