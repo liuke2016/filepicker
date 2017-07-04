@@ -8,13 +8,13 @@ Grab via Maven:
 <dependency>
   <groupId>com.lynn.filepicker</groupId>
   <artifactId>filepicker</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <type>pom</type>
 </dependency>
 ```
 or Gradle:
 ```groovy
-compile 'com.lynn.filepicker:filepicker:1.0.5'
+compile 'com.lynn.filepicker:filepicker:1.0.6'
 ```
 
 
