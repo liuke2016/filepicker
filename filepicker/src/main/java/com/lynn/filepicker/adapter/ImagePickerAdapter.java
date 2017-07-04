@@ -7,6 +7,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -120,7 +121,8 @@ public class ImagePickerAdapter extends BasePickerAdapter<ImageFile> {
                         File file = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM).getAbsolutePath()
                                 + "/IMG_" + timeStamp + ".jpg");
                         mImagePath = file.getAbsolutePath();
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
+                        Uri uri = FileProvider.getUriForFile(mContext,mContext.getPackageName()+".provider",file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                         ((Activity) mContext).startActivityForResult(intent, ImagePickerActivity.REQUEST_CODE_TAKE_IMAGE);
                     }
                 }, (PickerContract.IPickerView) mContext);
