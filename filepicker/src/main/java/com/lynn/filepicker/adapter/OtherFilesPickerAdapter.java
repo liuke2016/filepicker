@@ -6,6 +6,8 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
+import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -26,6 +28,7 @@ import com.lynn.filepicker.entity.OtherFile;
 import com.lynn.filepicker.entity.event.FileClickEvent;
 import com.lynn.filepicker.mvp.PickerContract;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -149,7 +152,13 @@ public class OtherFilesPickerAdapter extends BasePickerAdapter<OtherFile> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("file://" + file.getPath());
+                Uri uri = null;
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                    String authorities = mContext.getPackageName()+".provider";
+                    uri = FileProvider.getUriForFile(mContext, authorities, new File(file.getPath()));
+                } else {
+                    uri = Uri.parse("file://" + file.getPath());
+                }
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.setDataAndType(uri, file.getMimeType());
                 if (Util.detectIntent(mContext, intent)) {

@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -192,7 +194,13 @@ public class VideoPickerAdapter extends BasePickerAdapter<VideoFile> {
             videoPickerHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Uri uri = Uri.parse("file://" + file.getPath());
+                    Uri uri = null;
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                        String authorities = mContext.getPackageName()+".provider";
+                        uri = FileProvider.getUriForFile(mContext, authorities, new File(file.getPath()));
+                    } else {
+                        uri = Uri.parse("file://" + file.getPath());
+                    }
                     Intent intent = new Intent(Intent.ACTION_VIEW);
                     intent.setDataAndType(uri, "video/mp4");
                     if (Util.detectIntent(mContext, intent)) {

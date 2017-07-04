@@ -9,6 +9,7 @@ import com.lynn.filepicker.FilePicker;
 import com.lynn.filepicker.R;
 import com.lynn.filepicker.Util;
 import com.lynn.filepicker.config.ImagePickerConfig;
+import com.lynn.filepicker.db.IDao;
 import com.lynn.filepicker.db.ImageDao;
 import com.lynn.filepicker.entity.Folder;
 import com.lynn.filepicker.entity.ImageFile;
@@ -46,11 +47,16 @@ public class ImagePickerModel implements PickerContract.IPickerModel {
             ORIENTATION
     };
     private final Context mContext;
-    private final ImageDao mImageDao;
+    private final IDao mImageDao;
 
     public ImagePickerModel() {
         mContext = Util.getContext();
-        mImageDao = new ImageDao(mContext);
+        IDao imageDao = ((ImagePickerConfig) FilePicker.getPickerConfig()).getImageDao();
+        if(imageDao!=null){
+            mImageDao = imageDao;
+        }else{
+            mImageDao = new ImageDao(mContext);
+        }
     }
 
 

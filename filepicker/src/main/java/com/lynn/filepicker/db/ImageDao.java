@@ -11,13 +11,14 @@ import com.lynn.filepicker.entity.ImageFile;
  * Created by liuke on 2017/6/7.
  */
 
-public class ImageDao {
+public class ImageDao implements IDao{
     private ImageSQLiteHelper mSqLiteHelper;
 
     public ImageDao(Context context) {
         mSqLiteHelper = new ImageSQLiteHelper(context, DB.DB_NAME, null, 1);
     }
 
+    @Override
     public void insert(ImageFile imageFile) {
         SQLiteDatabase sqLiteDatabase = mSqLiteHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -28,6 +29,8 @@ public class ImageDao {
         sqLiteDatabase.insert(DB.TABLE_NAME, null, contentValues);
         sqLiteDatabase.close();
     }
+
+    @Override
     public void update(ImageFile imageFile){
         SQLiteDatabase sqLiteDatabase = mSqLiteHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -35,6 +38,8 @@ public class ImageDao {
         sqLiteDatabase.update(DB.TABLE_NAME,contentValues,DB.COLUMNS_IMAGE_ID+"=?",new String[]{imageFile.getId()+""});
         sqLiteDatabase.close();
     }
+
+    @Override
     public void find(ImageFile imageFile) {
         SQLiteDatabase sqLiteDatabase = mSqLiteHelper.getReadableDatabase();
         Cursor cursor = sqLiteDatabase.query(DB.TABLE_NAME, new String[]{DB.COLUMNS_EDITED_PATH, DB.COLUMNS_EDITED_COUNT}, DB.COLUMNS_IMAGE_ID + "=?", new String[]{imageFile.getId() + ""}, null, null, null);

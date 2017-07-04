@@ -40,6 +40,7 @@ import com.lynn.filepicker.R;
 import com.lynn.filepicker.RxBus;
 import com.lynn.filepicker.Util;
 import com.lynn.filepicker.config.ImagePickerConfig;
+import com.lynn.filepicker.db.IDao;
 import com.lynn.filepicker.db.ImageDao;
 import com.lynn.filepicker.entity.ImageFile;
 import com.lynn.filepicker.entity.event.EditImageEvent1;
@@ -79,21 +80,29 @@ public class ImageBrowserActivity extends AppCompatActivity {
     private ImageThumbnailAdapter mImageThumbnailAdapter = new ImageThumbnailAdapter();
     private HackyViewPager mViewPager;
     private boolean mIsPreview;
-    private ImageDao mImageDao;
+    private IDao mImageDao;
     private TextView mTvDone;
     private TextView mTvTitle;
+    private TextView mTvEdit;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMaxNumber = FilePicker.getPickerConfig().getMaxNumber();
+        ImagePickerConfig pickerConfig = (ImagePickerConfig) FilePicker.getPickerConfig();
+        mMaxNumber = pickerConfig.getMaxNumber();
         mCurrentNumber = getIntent().getIntExtra(IMAGE_BROWSER_SELECTED_NUMBER, 0);
         initIndex = getIntent().getIntExtra(IMAGE_BROWSER_INIT_INDEX, 0);
         mIsPreview = getIntent().getBooleanExtra("is_preview", false);
         mCurrentIndex = initIndex;
         mList = getIntent().getParcelableArrayListExtra(IMAGE_BROWSER_LIST);
-        mImageDao = new ImageDao(Util.getContext());
+        if(pickerConfig.getImageDao()!=null){
+            mImageDao = pickerConfig.getImageDao();
+        }else{
+            mImageDao = new ImageDao(Util.getContext());
+
+        }
+
         initView();
 
     }
@@ -200,17 +209,17 @@ public class ImageBrowserActivity extends AppCompatActivity {
         RelativeLayout rlBottomContainer = new RelativeLayout(this);
         rlBottomContainer.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Util.dip2px(45)));
 
-        ImagePickerConfig config = (ImagePickerConfig) FilePicker.getPickerConfig();
+        final ImagePickerConfig config = (ImagePickerConfig) FilePicker.getPickerConfig();
         if(config.isNeedEdit()){
-            TextView tvEdit = new TextView(this);
-            tvEdit.setText(R.string.edit);
-            tvEdit.setTextColor(Color.WHITE);
-            tvEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            tvEdit.setPadding(Util.dip2px(10), 0, 0, 0);
-            tvEdit.setGravity(Gravity.CENTER_VERTICAL);
-            tvEdit.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            rlBottomContainer.addView(tvEdit);
-            tvEdit.setOnClickListener(new View.OnClickListener() {
+            mTvEdit = new TextView(this);
+            mTvEdit.setText(R.string.edit);
+            mTvEdit.setTextColor(Color.WHITE);
+            mTvEdit.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            mTvEdit.setPadding(Util.dip2px(10), 0, 0, 0);
+            mTvEdit.setGravity(Gravity.CENTER_VERTICAL);
+            mTvEdit.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            rlBottomContainer.addView(mTvEdit);
+            mTvEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(ImageBrowserActivity.this, ImageEditActivity.class);
@@ -304,6 +313,13 @@ public class ImageBrowserActivity extends AppCompatActivity {
                     int p = Integer.valueOf(mSelectedPosition.get(i));
                     if (position == p) {
                         mRecyclerView.scrollToPosition(i);
+                    }
+                }
+                if(config.isNeedEdit()){
+                    if(mList.get(mCurrentIndex).getPath().endsWith(".gif")){
+                        mTvEdit.setVisibility(View.GONE);
+                    }else{
+                        mTvEdit.setVisibility(View.VISIBLE);
                     }
                 }
             }
