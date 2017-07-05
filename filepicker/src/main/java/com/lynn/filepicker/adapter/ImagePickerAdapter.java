@@ -121,7 +121,12 @@ public class ImagePickerAdapter extends BasePickerAdapter<ImageFile> {
                         File file = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM).getAbsolutePath()
                                 + "/IMG_" + timeStamp + ".jpg");
                         mImagePath = file.getAbsolutePath();
-                        Uri uri = FileProvider.getUriForFile(mContext,mContext.getPackageName()+".provider",file);
+                        Uri uri = null;
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uri = FileProvider.getUriForFile(mContext,mContext.getPackageName()+".provider",file);
+                        }else{
+                            uri = Uri.fromFile(file);
+                        }
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                         ((Activity) mContext).startActivityForResult(intent, ImagePickerActivity.REQUEST_CODE_TAKE_IMAGE);
                     }

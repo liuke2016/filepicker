@@ -127,7 +127,12 @@ public class VideoPickerAdapter extends BasePickerAdapter<VideoFile> {
                         File file = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DCIM).getAbsolutePath()
                                 + "/VID_" + timeStamp + ".mp4");
                         mVideoPath = file.getAbsolutePath();
-                        Uri uri = FileProvider.getUriForFile(mContext,mContext.getPackageName()+".provider",file);
+                        Uri uri = null;
+                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+                            uri = FileProvider.getUriForFile(mContext,mContext.getPackageName()+".provider",file);
+                        }else{
+                            uri = Uri.fromFile(file);
+                        }
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
                         intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
                         ((Activity) mContext).startActivityForResult(intent, VideoPickerActivity.REQUEST_CODE_TAKE_VIDEO);
